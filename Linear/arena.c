@@ -49,7 +49,7 @@ void *linear_arena_alloc(LinearArena *arena, size_t bytes, size_t alignment)
 
 void linear_arena_reset(LinearArena *arena)
 {
-    memset(arena->pool, arena->size, 0);
+    memset(arena->pool, 0, arena->size);
     arena->offset = 0;
 }
 
