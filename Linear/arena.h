@@ -13,10 +13,10 @@ typedef struct
 LinearArena linear_arena_new(size_t size);
 
 /* Returns NULL if it cannot return a block that size */
-void *linear_arena_alloc(LinearArena *, size_t bytes, size_t alignment);
+void *linear_arena_alloc(LinearArena *arena, size_t bytes);
 
-void linear_arena_reset(LinearArena *);
+void linear_arena_reset(LinearArena *arena);
 
-void linear_arena_free(LinearArena *);
+void linear_arena_free(LinearArena *arena);
 
 #endif /*_LINEAR_ARENA_H*/

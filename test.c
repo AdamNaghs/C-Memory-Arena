@@ -5,9 +5,7 @@
 #define ARENA_SIZE 10000
 static LinearArena arena = {0};
 
-#define alloc(size) linear_arena_alloc(&arena,size,8)
-
-#define alloc_aligned(size,align) linear_arena_alloc(&arena,size,align)
+#define alloc(size) linear_arena_alloc(&arena,size)
 
 CTF_TEST(New)
 {
@@ -43,27 +41,13 @@ CTF_TEST(Fill)
 CTF_TEST(Assorted)
 {
     linear_arena_reset(&arena);
-    int* a = alloc_aligned(sizeof(int), sizeof(int));
+    int* a = alloc(sizeof(int));
     *a = 40;
-    double* b = alloc_aligned(sizeof(double), sizeof(double));
+    double* b = alloc(sizeof(double));
     *b = 3.141545;
     CTF_LOG("%d,%f",*a,*b);
     CTF_ASSERT(*b == 3.141545);
     CTF_ASSERT(*a == 40);
-    CTF_PASS();
-}
-
-CTF_TEST(Alignment)
-{
-    linear_arena_reset(&arena);
-    CTF_ASSERT(arena.offset == 0);
-    CTF_LOG("Offset: %zu",arena.offset);
-    char* c = alloc_aligned(sizeof(char), sizeof(char));
-    CTF_ASSERT(arena.offset == 1);
-    CTF_LOG("Offset: %zu",arena.offset);
-    int* i = alloc_aligned(sizeof(int),sizeof(int));
-    CTF_LOG("sizeof(int): %zu",sizeof(int));
-    CTF_ASSERT_LOG(arena.offset == 4,"Actual: %zu",arena.offset);
     CTF_PASS();
 }
 
@@ -73,7 +57,6 @@ CTF_SUITE(
         CTF_LINK(Arena, New);
         CTF_LINK(Arena, Fill);
         CTF_LINK(Arena, Assorted);
-        CTF_LINK(Arena, Alignment);
     }
 )
 

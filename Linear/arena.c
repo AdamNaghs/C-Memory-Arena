@@ -18,26 +18,13 @@ LinearArena linear_arena_new(size_t size)
 }
 
 /* Returns NULL if it cannot return a block that size */
-void *linear_arena_alloc(LinearArena *arena, size_t bytes, size_t alignment)
+void *linear_arena_alloc(LinearArena *arena, size_t bytes)
 {
-    if (alignment == 0) 
-    {
-        return NULL;  
-    }
+    const size_t alignment = sizeof(void*); // Safe alignment
 
-    /* Calculate aligned offset */
-    printf("arena->offset:%zu|%zx\n",arena->offset,arena->offset);
-    printf("alignment:%zu|%zx\n",alignment,alignment);
-    printf("alignment-1:%zu|%zx\n",alignment-1,alignment-1);
-    printf("~(alignment-1):%zu|%zx",~(alignment-1),~(alignment-1));
     size_t aligned_offset = (arena->offset + (alignment - 1)) & ~(alignment - 1);
-    printf("aligned offset:%zu",aligned_offset);
-    
-    //printf("aligned offset: %zu\n",aligned_offset);
-    
-    /* Check for overflow and insufficient space */
-    if (aligned_offset > arena->size ||
-        bytes > arena->size - aligned_offset)
+
+    if (aligned_offset > arena->size || bytes > arena->size - aligned_offset)
     {
         return NULL;
     }
@@ -46,6 +33,7 @@ void *linear_arena_alloc(LinearArena *arena, size_t bytes, size_t alignment)
     arena->offset = aligned_offset + bytes;
     return memory;
 }
+
 
 void linear_arena_reset(LinearArena *arena)
 {
